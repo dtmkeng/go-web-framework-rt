@@ -6,8 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"runtime"
 
+	"github.com/astaxie/beego"
+	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
 )
 
@@ -54,6 +57,7 @@ func ginHandleWrite(c *gin.Context) {
 }
 
 func ginHandleTest(c *gin.Context) {
+
 	io.WriteString(c.Writer, c.Request.RequestURI)
 }
 
@@ -82,4 +86,67 @@ func loadGinSingle(method, path string, handle gin.HandlerFunc) http.Handler {
 func main() {
 	fmt.Println("Usage: go test -bench=. -timeout=20m")
 	os.Exit(1)
+}
+
+// sbeego
+func beegoHandler(ctx *bc.Context) {}
+
+func beegoHandlerWrite(ctx *bc.Context) {
+	ctx.WriteString(ctx.Input.Param(":name"))
+}
+
+func beegoHandlerTest(ctx *bc.Context) {
+	ctx.WriteString(ctx.Request.RequestURI)
+}
+
+func initBeego() {
+	beego.BConfig.RunMode = beego.PROD
+	// beego
+}
+
+func loadBeego(routes []route) http.Handler {
+	h := beegoHandler
+	if loadTestHandler {
+		h = beegoHandlerTest
+	}
+
+	re := regexp.MustCompile(":([^/]*)")
+	app := beego.NewControllerRegister()
+	for _, route := range routes {
+		route.path = re.ReplaceAllString(route.path, ":$1")
+		switch route.method {
+		case "GET":
+			app.Get(route.path, h)
+		case "POST":
+			app.Post(route.path, h)
+		case "PUT":
+			app.Put(route.path, h)
+		case "PATCH":
+			app.Patch(route.path, h)
+		case "DELETE":
+			app.Delete(route.path, h)
+		default:
+			panic("Unknow HTTP method: " + route.method)
+		}
+	}
+	return app
+}
+
+func loadBeegoSingle(method, path string, handler beego.FilterFunc) http.Handler {
+	app := beego.NewControllerRegister()
+	switch method {
+	case "GET":
+		app.Get(path, handler)
+	case "POST":
+		app.Post(path, handler)
+	case "PUT":
+		app.Put(path, handler)
+	case "PATCH":
+		app.Patch(path, handler)
+	case "DELETE":
+		app.Delete(path, handler)
+	default:
+		panic("Unknow HTTP method: " + method)
+	}
+	return app
 }

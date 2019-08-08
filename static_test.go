@@ -166,8 +166,8 @@ var staticRoutes = []route{
 }
 
 var (
-	staticGin http.Handler
-
+	staticGin   http.Handler
+	staticBeego http.Handler
 	// staticZeus        http.Handler
 )
 
@@ -175,8 +175,14 @@ func init() {
 	calcMem("Gin", func() {
 		staticGin = loadGin(staticRoutes)
 	})
+	calcMem("Beego", func() {
+		staticBeego = loadBeego(staticRoutes)
+	})
 
 }
 func BenchmarkGin_StaticAll(b *testing.B) {
 	benchRoutes(b, staticGin, staticRoutes)
+}
+func BenchmarkBeego_StaticAll(b *testing.B) {
+	benchRoutes(b, staticBeego, staticRoutes)
 }

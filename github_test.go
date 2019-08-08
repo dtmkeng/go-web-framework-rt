@@ -270,12 +270,16 @@ var githubAPI = []route{
 }
 
 var (
-	githubGin http.Handler
+	githubGin   http.Handler
+	githubBeego http.Handler
 )
 
 func init() {
 	calcMem("Gin", func() {
 		githubGin = loadGin(githubAPI)
+	})
+	calcMem("Beego", func() {
+		githubBeego = loadBeego(githubAPI)
 	})
 }
 func BenchmarkGin_GithubStatic(b *testing.B) {
@@ -288,4 +292,16 @@ func BenchmarkGin_GithubParam(b *testing.B) {
 }
 func BenchmarkGin_GithubAll(b *testing.B) {
 	benchRoutes(b, githubGin, githubAPI)
+}
+
+func BenchmarkBeego_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubBeego, req)
+}
+func BenchmarkBeego_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubBeego, req)
+}
+func BenchmarkBeego_GithubAll(b *testing.B) {
+	benchRoutes(b, githubBeego, githubAPI)
 }
