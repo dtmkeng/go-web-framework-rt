@@ -12,6 +12,7 @@ import (
 	"github.com/astaxie/beego"
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
+	"github.com/revel/pathtree"
 	"github.com/revel/revel"
 )
 
@@ -152,7 +153,8 @@ func loadBeegoSingle(method, path string, handler beego.FilterFunc) http.Handler
 	}
 	return app
 }
-// 
+
+// RevelController ...
 // Revel (Router only)
 // In the following code some Revel internals are modelled.
 // The original revel code is copyrighted by Rob Figueiredo.
@@ -162,16 +164,19 @@ type RevelController struct {
 	router *revel.Router
 }
 
+//Handle ...
 func (rc *RevelController) Handle() revel.Result {
 	return revelResult{}
 }
 
+//HandleWrite ...
 func (rc *RevelController) HandleWrite() revel.Result {
 	return rc.RenderText(rc.Params.Get("name"))
 }
 
+//HandleTest ...
 func (rc *RevelController) HandleTest() revel.Result {
-	return rc.RenderText(rc.Request.ContentType)
+	return rc.RenderText(rc.Request.GetRequestURI())
 }
 
 type revelResult struct{}
@@ -186,28 +191,28 @@ func (rc *RevelController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if upgrade == "websocket" || upgrade == "Websocket" {
 		panic("Not implemented")
 	} else {
-		var (
+		context := revel.NewGoContext(nil)
+		context.Response.SetResponse(w)
+		context.Request.SetRequest(r)
 
-			//req  = revel.NewRequest(r)
-			resp = revel.NewResponse(w)
-			c    = revel.NewController(req, resp)
-		)
-		req.Websocket = nil
-		revel.Filters[0](c, revel.Filters[1:])
+		c := revel.NewController(context)
+
+		c.Request.WebSocket = nil
+		// revel.Filters[0](c, revel.Filters[1:])
 		if c.Result != nil {
-			c.Result.Apply(req, resp)
+			c.Result.Apply(c.Request, c.Response)
 		} else if c.Response.Status != 0 {
 			panic("Not implemented")
 		}
 		// Close the Writer if we can
-		if w, ok := resp.Out.(io.Closer); ok {
+		if w, ok := c.Response.GetWriter().(io.Closer); ok {
 			w.Close()
 		}
 	}
 }
-
 func initRevel() {
 	// Only use the Revel filters required for this benchmark
+	// revel.AppLog =
 	revel.Filters = []revel.Filter{
 		revel.RouterFilter,
 		revel.ParamsFilter,
@@ -228,6 +233,10 @@ func initRevel() {
 		})
 }
 
+var (
+	appModule = &revel.Module{Name: "App"}
+)
+
 func loadRevel(routes []route) http.Handler {
 	h := "RevelController.Handle"
 	if loadTestHandler {
@@ -239,7 +248,8 @@ func loadRevel(routes []route) http.Handler {
 	// parseRoutes
 	var rs []*revel.Route
 	for _, r := range routes {
-		rs = append(rs, revel.NewRoute(r.method, r.path, h, "", "", 0))
+		// revel.NewRoute(revel.appmo, method, path, action, fixedArgs, routesPath, line)
+		rs = append(rs, revel.NewRoute(appModule, r.method, r.path, h, "", "", 0))
 	}
 	router.Routes = rs
 
@@ -261,11 +271,10 @@ func loadRevel(routes []route) http.Handler {
 	rc.router = router
 	return rc
 }
-
 func loadRevelSingle(method, path, action string) http.Handler {
 	router := revel.NewRouter("")
 
-	route := revel.NewRoute(method, path, action, "", "", 0)
+	route := revel.NewRoute(appModule, method, path, action, "", "", 0)
 	if err := router.Tree.Add(route.TreePath, route); err != nil {
 		panic(err)
 	}

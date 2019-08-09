@@ -168,7 +168,7 @@ var staticRoutes = []route{
 var (
 	staticGin   http.Handler
 	staticBeego http.Handler
-	// staticZeus        http.Handler
+	staticRevel http.Handler
 )
 
 func init() {
@@ -178,11 +178,17 @@ func init() {
 	calcMem("Beego", func() {
 		staticBeego = loadBeego(staticRoutes)
 	})
+	calcMem("Revel", func() {
+		staticRevel = loadRevel(staticRoutes)
+	})
 
 }
 func BenchmarkGin_StaticAll(b *testing.B) {
 	benchRoutes(b, staticGin, staticRoutes)
 }
 func BenchmarkBeego_StaticAll(b *testing.B) {
+	benchRoutes(b, staticBeego, staticRoutes)
+}
+func BenchmarkRevel_StaticAll(b *testing.B) {
 	benchRoutes(b, staticBeego, staticRoutes)
 }
