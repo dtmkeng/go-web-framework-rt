@@ -178,9 +178,9 @@ func init() {
 	calcMem("Beego", func() {
 		staticBeego = loadBeego(staticRoutes)
 	})
-	calcMem("Revel", func() {
-		staticRevel = loadRevel(staticRoutes)
-	})
+	// calcMem("Revel", func() {
+	// 	staticRevel = loadRevel(staticRoutes)
+	// })
 
 }
 func BenchmarkGin_StaticAll(b *testing.B) {

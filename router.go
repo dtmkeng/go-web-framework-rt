@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"runtime"
 
+	"github.com/aerogo/aero"
 	"github.com/astaxie/beego"
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
@@ -377,3 +378,65 @@ func loadEchoSingle(method, path string, h echo.HandlerFunc) http.Handler {
 	}
 	return e
 }
+
+// aero
+func aeroHandler(c aero.Context) error {
+	return nil
+}
+
+func aeroHandlerWrite(ctx aero.Context) error {
+	io.WriteString(ctx.Response().Internal(), ctx.Get("name"))
+	return nil
+}
+func aeroHandlerTest(ctx aero.Context) error {
+	io.WriteString(ctx.Response().Internal(), ctx.Request().Path())
+	return nil
+}
+func loadAero(routes []route) http.Handler {
+	var h aero.Handler = aeroHandler
+	if loadTestHandler {
+		h = aeroHandlerTest
+	}
+	app := aero.New()
+	for _, r := range routes {
+		switch r.method {
+		case "GET":
+			app.Get(r.path, h)
+		case "POST":
+			app.Post(r.path, h)
+		case "PUT":
+			app.Put(r.path, h)
+		case "PATCH":
+			app.Router().Add(http.MethodPatch, r.path, h)
+		case "DELETE":
+			app.Delete(r.path, h)
+		default:
+			panic("Unknow HTTP method: " + r.method)
+		}
+	}
+	return app
+}
+func loadAeroSingle(method, path string, h aero.Handler) http.Handler {
+	app := aero.New()
+	switch method {
+	case "GET":
+		app.Get(path, h)
+	case "POST":
+		app.Post(path, h)
+	case "PUT":
+		app.Put(path, h)
+	case "PATCH":
+		app.Router().Add(http.MethodPatch, path, h)
+	case "DELETE":
+		app.Delete(path, h)
+	default:
+		panic("Unknow HTTP method: " + method)
+	}
+	// }
+	return app
+}
+
+// func aeroHandlerTest(c aero.Context) error {
+// 	io.WriteString(c.Response(), c.Request())
+// 	return nil
+// }
