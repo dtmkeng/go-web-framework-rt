@@ -248,3 +248,83 @@ func BenchmarkAero_ParamWrite(b *testing.B) {
 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
 	benchRequest(b, router, r)
 }
+
+// GoJSONREST
+func BenchmarkGoJsonRest_Param(b *testing.B) {
+	router := loadGoJsonRestSingle("GET", "/user/:name", goJsonRestHandler)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkGoJsonRest_Param5(b *testing.B) {
+	handler := loadGoJsonRestSingle("GET", fiveColon, goJsonRestHandler)
+
+	r, _ := http.NewRequest("GET", fiveRoute, nil)
+	benchRequest(b, handler, r)
+}
+func BenchmarkGoJsonRest_Param20(b *testing.B) {
+	handler := loadGoJsonRestSingle("GET", twentyColon, goJsonRestHandler)
+
+	r, _ := http.NewRequest("GET", twentyRoute, nil)
+	benchRequest(b, handler, r)
+}
+func BenchmarkGoJsonRest_ParamWrite(b *testing.B) {
+	handler := loadGoJsonRestSingle("GET", "/user/:name", goJsonRestHandlerWrite)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, handler, r)
+}
+
+// Buffalo
+
+func BenchmarkBuffalo_Param(b *testing.B) {
+	router := loadBuffaloSingle("GET", "/user/:name", buffaloHandler)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+
+func BenchmarkBuffalo_Param5(b *testing.B) {
+	handler := loadBuffaloSingle("GET", fiveColon, buffaloHandler)
+
+	r, _ := http.NewRequest("GET", fiveRoute, nil)
+	benchRequest(b, handler, r)
+}
+func BenchmarkBuffalo_Param20(b *testing.B) {
+	handler := loadBuffaloSingle("GET", twentyColon, buffaloHandler)
+
+	r, _ := http.NewRequest("GET", twentyRoute, nil)
+	benchRequest(b, handler, r)
+}
+func BenchmarkBuffalo_ParamWrite(b *testing.B) {
+	handler := loadBuffaloSingle("GET", "/user/:name", buffaloHandlerTest)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, handler, r)
+}
+
+// Air
+// func BenchmarkAir_Param(b *testing.B) {
+// 	router := loadAirSingle("GET", "/user/:name", airHandler)
+
+// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+// 	benchRequest(b, router, r)
+// }
+// func BenchmarkAir_Param5(b *testing.B) {
+// 	handler := loadAirSingle("GET", fiveColon, airHandler)
+
+// 	r, _ := http.NewRequest("GET", fiveRoute, nil)
+// 	benchRequest(b, handler, r)
+// }
+// func BenchmarkAir_Param20(b *testing.B) {
+// 	handler := loadAirSingle("GET", twentyColon, airHandler)
+
+// 	r, _ := http.NewRequest("GET", twentyRoute, nil)
+// 	benchRequest(b, handler, r)
+// }
+// func BenchmarkAir_ParamWrite(b *testing.B) {
+// 	handler := loadAirSingle("GET", "/user/:name", airHandlerTest)
+
+// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+// 	benchRequest(b, handler, r)
+// }

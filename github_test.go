@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"testing"
 )
 
 // http://developer.github.com/v3/
@@ -282,26 +281,27 @@ func init() {
 		githubBeego = loadBeego(githubAPI)
 	})
 }
-func BenchmarkGin_GithubStatic(b *testing.B) {
-	req, _ := http.NewRequest("GET", "/user/repos", nil)
-	benchRequest(b, githubGin, req)
-}
-func BenchmarkGin_GithubParam(b *testing.B) {
-	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
-	benchRequest(b, githubGin, req)
-}
-func BenchmarkGin_GithubAll(b *testing.B) {
-	benchRoutes(b, githubGin, githubAPI)
-}
 
-func BenchmarkBeego_GithubStatic(b *testing.B) {
-	req, _ := http.NewRequest("GET", "/user/repos", nil)
-	benchRequest(b, githubBeego, req)
-}
-func BenchmarkBeego_GithubParam(b *testing.B) {
-	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
-	benchRequest(b, githubBeego, req)
-}
-func BenchmarkBeego_GithubAll(b *testing.B) {
-	benchRoutes(b, githubBeego, githubAPI)
-}
+// func BenchmarkGin_GithubStatic(b *testing.B) {
+// 	req, _ := http.NewRequest("GET", "/user/repos", nil)
+// 	benchRequest(b, githubGin, req)
+// }
+// func BenchmarkGin_GithubParam(b *testing.B) {
+// 	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+// 	benchRequest(b, githubGin, req)
+// }
+// func BenchmarkGin_GithubAll(b *testing.B) {
+// 	benchRoutes(b, githubGin, githubAPI)
+// }
+
+// func BenchmarkBeego_GithubStatic(b *testing.B) {
+// 	req, _ := http.NewRequest("GET", "/user/repos", nil)
+// 	benchRequest(b, githubBeego, req)
+// }
+// func BenchmarkBeego_GithubParam(b *testing.B) {
+// 	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+// 	benchRequest(b, githubBeego, req)
+// }
+// func BenchmarkBeego_GithubAll(b *testing.B) {
+// 	benchRoutes(b, githubBeego, githubAPI)
+// }

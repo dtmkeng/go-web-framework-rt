@@ -11,9 +11,12 @@ import (
 	"runtime"
 
 	"github.com/aerogo/aero"
+	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/astaxie/beego"
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
+	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/envy"
 	"github.com/gorilla/mux"
 	"github.com/revel/pathtree"
 	"github.com/revel/revel"
@@ -57,7 +60,6 @@ func init() {
 	initBeego()
 	initGin()
 	initRevel()
-
 }
 
 // Gin
@@ -436,7 +438,166 @@ func loadAeroSingle(method, path string, h aero.Handler) http.Handler {
 	return app
 }
 
-// func aeroHandlerTest(c aero.Context) error {
-// 	io.WriteString(c.Response(), c.Request())
+// GORESTJSON
+func goJsonRestHandler(w rest.ResponseWriter, req *rest.Request) {}
+
+func goJsonRestHandlerWrite(w rest.ResponseWriter, req *rest.Request) {
+	io.WriteString(w.(io.Writer), req.PathParam("name"))
+}
+
+func goJsonRestHandlerTest(w rest.ResponseWriter, req *rest.Request) {
+	io.WriteString(w.(io.Writer), req.RequestURI)
+}
+
+func loadGoJsonRest(routes []route) http.Handler {
+	h := goJsonRestHandler
+	if loadTestHandler {
+		h = goJsonRestHandlerTest
+	}
+
+	api := rest.NewApi()
+	restRoutes := make([]*rest.Route, 0, len(routes))
+	for _, route := range routes {
+		restRoutes = append(restRoutes,
+			&rest.Route{route.method, route.path, h},
+		)
+	}
+	router, err := rest.MakeRouter(restRoutes...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	api.SetApp(router)
+	return api.MakeHandler()
+}
+
+func loadGoJsonRestSingle(method, path string, hfunc rest.HandlerFunc) http.Handler {
+	api := rest.NewApi()
+	router, err := rest.MakeRouter(
+		&rest.Route{method, path, hfunc},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	api.SetApp(router)
+	return api.MakeHandler()
+}
+
+// buffalo
+//  ENV ...
+var ENV = envy.Get("GO_ENV", "development")
+
+func buffaloHandler(c buffalo.Context) error {
+	return nil
+}
+func buffaloHandlerWrite(c buffalo.Context) error {
+	io.WriteString(c.Response(), c.Param("name"))
+	return nil
+}
+func buffaloHandlerTest(c buffalo.Context) error {
+	io.WriteString(c.Response(), c.Request().RequestURI)
+	return nil
+}
+func loadBuffalo(routes []route) http.Handler {
+	h := buffaloHandler
+	if loadTestHandler {
+		h = buffaloHandlerTest
+	}
+	app := buffalo.New(buffalo.Options{})
+	for _, r := range routes {
+		switch r.method {
+		case "GET":
+			app.GET(r.path, h)
+		case "POST":
+			app.POST(r.path, h)
+		case "PUT":
+			app.PUT(r.path, h)
+		case "PATCH":
+			app.PATCH(r.path, h)
+		case "DELETE":
+			app.DELETE(r.path, h)
+		default:
+			panic("Unknow HTTP method: " + r.method)
+		}
+	}
+	return app
+}
+func loadBuffaloSingle(method, path string, h buffalo.Handler) http.Handler {
+	app := buffalo.New(buffalo.Options{})
+	// buffalo.NewOptions()
+	switch method {
+	case "GET":
+		app.GET(path, h)
+	case "POST":
+		app.POST(path, h)
+	case "PUT":
+		app.PUT(path, h)
+	case "PATCH":
+		app.PATCH(path, h)
+	case "DELETE":
+		app.DELETE(path, h)
+	default:
+		panic("Unknow HTTP method: " + method)
+	}
+	// app.PreHandlers = http.Handler.ServeHTTP(nil, nil)
+	return app
+}
+
+// func airHandler(req *air.Request, res *air.Response) error {
+// 	return nil
+// }
+// func airHandlerWrite(req *air.Request, res *air.Response) error {
+// 	// io.WriteString(res, s)
+// 	return res.WriteString(req.Param("name").Value().String())
+// }
+// func airHandlerTest(req *air.Request, res *air.Response) error {
+// 	return res.WriteString(req.Path)
+// }
+
+// // func (a *air.Air) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// // 	// a := air.New()
+// // 	a.server.ServeHTTP(r, w)
+// // }
+// func loadAir(routes []route) http.Handler {
+// 	h := airHandler
+// 	if loadTestHandler {
+// 		h = airHandlerTest
+// 	}
+// 	app := air.Default
+// 	for _, r := range routes {
+// 		switch r.method {
+// 		case "GET":
+// 			app.GET(r.path, h)
+// 		case "POST":
+// 			app.POST(r.path, h)
+// 		case "PUT":
+// 			app.PUT(r.path, h)
+// 		case "PATCH":
+// 			app.PATCH(r.path, h)
+// 		case "DELETE":
+// 			app.DELETE(r.path, h)
+// 		default:
+// 			panic("Unknow HTTP method: " + r.method)
+// 		}
+// 	}
+// 	return nil
+// }
+// func loadAirSingle(method, path string, h air.Handler) http.Handler {
+
+// 	app := air.Default
+// 	switch method {
+// 	case "GET":
+// 		app.GET(path, h)
+// 	case "POST":
+// 		app.POST(path, h)
+// 	case "PUT":
+// 		app.PUT(path, h)
+// 	case "PATCH":
+// 		app.PATCH(path, h)
+// 	case "DELETE":
+// 		app.DELETE(path, h)
+// 	default:
+// 		panic("Unknow HTTP method: " + method)
+// 	}
+
 // 	return nil
 // }
