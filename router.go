@@ -1,6 +1,7 @@
 package main
 
 import (
+	"echo"
 	"fmt"
 	"io"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"github.com/astaxie/beego"
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 	"github.com/revel/pathtree"
 	"github.com/revel/revel"
 )
@@ -36,6 +38,11 @@ func (m *mockResponseWriter) Write(p []byte) (n int, err error) {
 
 func (m *mockResponseWriter) WriteString(s string) (n int, err error) {
 	return len(s), nil
+}
+func httpHandlerFunc(w http.ResponseWriter, r *http.Request) {}
+
+func httpHandlerFuncTest(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, r.RequestURI)
 }
 func (m *mockResponseWriter) WriteHeader(int) {}
 func init() {
@@ -282,4 +289,91 @@ func loadRevelSingle(method, path, action string) http.Handler {
 	rc := new(RevelController)
 	rc.router = router
 	return rc
+}
+
+// gorilamux
+func gorillaHandlerWrite(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	io.WriteString(w, params["name"])
+}
+
+func loadGorillaMux(routes []route) http.Handler {
+	h := httpHandlerFunc
+	if loadTestHandler {
+		h = httpHandlerFuncTest
+	}
+
+	re := regexp.MustCompile(":([^/]*)")
+	m := mux.NewRouter()
+	for _, route := range routes {
+		m.HandleFunc(
+			re.ReplaceAllString(route.path, "{$1}"),
+			h,
+		).Methods(route.method)
+	}
+	return m
+}
+
+func loadGorillaMuxSingle(method, path string, handler http.HandlerFunc) http.Handler {
+	m := mux.NewRouter()
+	m.HandleFunc(path, handler).Methods(method)
+	return m
+}
+
+// echo
+func echoHandler(c echo.Context) error {
+	return nil
+}
+func echoHandlerWrite(c echo.Context) error {
+	io.WriteString(c.Response(), c.Param("name"))
+	return nil
+}
+func echoHandlerTest(c echo.Context) error {
+	io.WriteString(c.Response(), c.Request().RequestURI)
+	return nil
+}
+
+func loadEcho(routes []route) http.Handler {
+	var h echo.HandlerFunc = echoHandler
+	if loadTestHandler {
+		h = echoHandlerTest
+	}
+
+	e := echo.New()
+	for _, r := range routes {
+		switch r.method {
+		case "GET":
+			e.GET(r.path, h)
+		case "POST":
+			e.POST(r.path, h)
+		case "PUT":
+			e.PUT(r.path, h)
+		case "PATCH":
+			e.PATCH(r.path, h)
+		case "DELETE":
+			e.DELETE(r.path, h)
+		default:
+			panic("Unknow HTTP method: " + r.method)
+		}
+	}
+	return e
+}
+
+func loadEchoSingle(method, path string, h echo.HandlerFunc) http.Handler {
+	e := echo.New()
+	switch method {
+	case "GET":
+		e.GET(path, h)
+	case "POST":
+		e.POST(path, h)
+	case "PUT":
+		e.PUT(path, h)
+	case "PATCH":
+		e.PATCH(path, h)
+	case "DELETE":
+		e.DELETE(path, h)
+	default:
+		panic("Unknow HTTP method: " + method)
+	}
+	return e
 }

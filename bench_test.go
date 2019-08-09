@@ -170,3 +170,54 @@ func BenchmarkRevel_ParamWrite(b *testing.B) {
 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
 	benchRequest(b, router, r)
 }
+
+func BenchmarkGorillaMux_Param(b *testing.B) {
+	router := loadGorillaMuxSingle("GET", "/user/{name}", httpHandlerFunc)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkGorillaMux_Param5(b *testing.B) {
+	router := loadGorillaMuxSingle("GET", fiveBrace, httpHandlerFunc)
+
+	r, _ := http.NewRequest("GET", fiveRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkGorillaMux_Param20(b *testing.B) {
+	router := loadGorillaMuxSingle("GET", twentyBrace, httpHandlerFunc)
+
+	r, _ := http.NewRequest("GET", twentyRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkGorillaMux_ParamWrite(b *testing.B) {
+	router := loadGorillaMuxSingle("GET", "/user/{name}", gorillaHandlerWrite)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+
+// echo
+func BenchmarkEcho_Param(b *testing.B) {
+	router := loadEchoSingle("GET", "/user/{name}", echoHandler)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkEcho_Param5(b *testing.B) {
+	router := loadEchoSingle("GET", fiveBrace, echoHandler)
+
+	r, _ := http.NewRequest("GET", fiveRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkEcho_Param20(b *testing.B) {
+	router := loadEchoSingle("GET", twentyBrace, echoHandler)
+
+	r, _ := http.NewRequest("GET", twentyRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkEcho_ParamWrite(b *testing.B) {
+	router := loadEchoSingle("GET", "/user/{name}", echoHandlerWrite)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
