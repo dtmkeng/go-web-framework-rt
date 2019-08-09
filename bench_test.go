@@ -222,3 +222,29 @@ func BenchmarkEcho_ParamWrite(b *testing.B) {
 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
 	benchRequest(b, router, r)
 }
+
+// Aero
+func BenchmarkAero_Param(b *testing.B) {
+	router := loadAeroSingle("GET", "/user/{name}", aeroHandler)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkAero_Param5(b *testing.B) {
+	router := loadAeroSingle("GET", fiveBrace, aeroHandler)
+
+	r, _ := http.NewRequest("GET", fiveRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkAero_Param20(b *testing.B) {
+	router := loadAeroSingle("GET", twentyBrace, aeroHandler)
+
+	r, _ := http.NewRequest("GET", twentyRoute, nil)
+	benchRequest(b, router, r)
+}
+func BenchmarkAero_ParamWrite(b *testing.B) {
+	router := loadAeroSingle("GET", "/user/{name}", aeroHandlerTest)
+
+	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	benchRequest(b, router, r)
+}
