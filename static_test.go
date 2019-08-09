@@ -166,17 +166,38 @@ var staticRoutes = []route{
 }
 
 var (
-	staticGin   http.Handler
-	staticBeego http.Handler
-	staticRevel http.Handler
+	staticGin        http.Handler
+	staticBeego      http.Handler
+	staticRevel      http.Handler
+	staticEcho       http.Handler
+	staticGorilaMux  http.Handler
+	staticAero       http.Handler
+	staticGOJSONREST http.Handler
+	staticBuffalo    http.Handler
 )
 
 func init() {
-	calcMem("Gin", func() {
+	calcMem("Gin_static", func() {
 		staticGin = loadGin(staticRoutes)
 	})
-	calcMem("Beego", func() {
+	calcMem("Beego_staic", func() {
 		staticBeego = loadBeego(staticRoutes)
+	})
+
+	calcMem("Echo_Static", func() {
+		staticEcho = loadEcho(staticRoutes)
+	})
+	calcMem("Gorilamux_static", func() {
+		staticGorilaMux = loadGorillaMux(staticRoutes)
+	})
+	calcMem("Aero_static", func() {
+		staticAero = loadAero(staticRoutes)
+	})
+	calcMem("GoJSONRest_static", func() {
+		staticGOJSONREST = loadGoJsonRest(staticRoutes)
+	})
+	calcMem("Buffalo_static", func() {
+		staticBuffalo = loadBuffalo(staticRoutes)
 	})
 	// calcMem("Revel", func() {
 	// 	staticRevel = loadRevel(staticRoutes)
@@ -189,6 +210,18 @@ func BenchmarkGin_StaticAll(b *testing.B) {
 func BenchmarkBeego_StaticAll(b *testing.B) {
 	benchRoutes(b, staticBeego, staticRoutes)
 }
-func BenchmarkRevel_StaticAll(b *testing.B) {
-	benchRoutes(b, staticBeego, staticRoutes)
+func BenchmarkEcho_StaticAll(b *testing.B) {
+	benchRoutes(b, staticEcho, staticRoutes)
+}
+func BenchmarkGorilaMux_StaticAll(b *testing.B) {
+	benchRoutes(b, staticGorilaMux, staticRoutes)
+}
+func BenchmarkAero_StaticAll(b *testing.B) {
+	benchRoutes(b, staticAero, staticRoutes)
+}
+func BenchmarkGoJSONRest_StaticAll(b *testing.B) {
+	benchRoutes(b, staticGOJSONREST, staticRoutes)
+}
+func BenchmarkBuffalo_StaticAll(b *testing.B) {
+	benchRoutes(b, staticBuffalo, staticRoutes)
 }

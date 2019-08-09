@@ -274,10 +274,10 @@ var (
 )
 
 func init() {
-	calcMem("Gin", func() {
+	calcMem("Gin_github", func() {
 		githubGin = loadGin(githubAPI)
 	})
-	calcMem("Beego", func() {
+	calcMem("Beego_github", func() {
 		githubBeego = loadBeego(githubAPI)
 	})
 }

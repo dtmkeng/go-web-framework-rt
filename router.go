@@ -196,7 +196,6 @@ func (rr revelResult) Apply(req *revel.Request, resp *revel.Response) {}
 func (rc *RevelController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Dirty hacks, do NOT copy!
 	revel.MainRouter = rc.router
-
 	upgrade := r.Header.Get("Upgrade")
 	if upgrade == "websocket" || upgrade == "Websocket" {
 		panic("Not implemented")
@@ -482,7 +481,7 @@ func loadGoJsonRestSingle(method, path string, hfunc rest.HandlerFunc) http.Hand
 	return api.MakeHandler()
 }
 
-// buffalo
+// 	buffalo
 //  ENV ...
 var ENV = envy.Get("GO_ENV", "development")
 
