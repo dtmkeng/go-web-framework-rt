@@ -560,7 +560,7 @@ func loadBuffaloSingle(method, path string, h buffalo.Handler) http.Handler {
 // 	if loadTestHandler {
 // 		h = airHandlerTest
 // 	}
-// 	app := air.Default
+// 	app := air.New()
 // 	for _, r := range routes {
 // 		switch r.method {
 // 		case "GET":
@@ -577,11 +577,12 @@ func loadBuffaloSingle(method, path string, h buffalo.Handler) http.Handler {
 // 			panic("Unknow HTTP method: " + r.method)
 // 		}
 // 	}
+
 // 	return app
 // }
 // func loadAirSingle(method, path string, h air.Handler) http.Handler {
 
-// 	app := air.Default
+// 	app := air.New()
 // 	switch method {
 // 	case "GET":
 // 		app.GET(path, h)
