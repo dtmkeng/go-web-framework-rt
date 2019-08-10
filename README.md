@@ -93,4 +93,15 @@ BenchmarkGoJSONRest_StaticAll    	   10000	    248556 ns/op	   51653 B/op	    17
 BenchmarkBuffalo_StaticAll       	     100	  21897045 ns/op	 5369652 B/op	   49523 allocs/op
 PASS
 ok  	github.com/dtmkeng/project/http_router	124.128s
-``
+```
+## Detail test
+    - githubapi = 203
+        GET = 131
+        POST = 29
+        PUT = 15
+        PATCH = 28
+    - staticapi
+        GET =  157
+        POST =  0
+        PUT = 0
+        PATCH = 0
