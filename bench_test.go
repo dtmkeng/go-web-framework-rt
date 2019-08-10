@@ -251,26 +251,26 @@ func BenchmarkAero_ParamWrite(b *testing.B) {
 }
 
 // GoJSONREST
-func BenchmarkGoJsonRest_Param(b *testing.B) {
-	router := loadGoJsonRestSingle("GET", "/user/:name", goJsonRestHandler)
+func BenchmarkGOJSONREST_Param(b *testing.B) {
+	router := loadGOJSONRESTSingle("GET", "/user/:name", goJSONRESTHandler)
 
 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkGoJsonRest_Param5(b *testing.B) {
-	handler := loadGoJsonRestSingle("GET", fiveColon, goJsonRestHandler)
+func BenchmarkGOJSONREST_Param5(b *testing.B) {
+	handler := loadGOJSONRESTSingle("GET", fiveColon, goJSONRESTHandler)
 
 	r, _ := http.NewRequest("GET", fiveRoute, nil)
 	benchRequest(b, handler, r)
 }
-func BenchmarkGoJsonRest_Param20(b *testing.B) {
-	handler := loadGoJsonRestSingle("GET", twentyColon, goJsonRestHandler)
+func BenchmarkGOJSONREST_Param20(b *testing.B) {
+	handler := loadGOJSONRESTSingle("GET", twentyColon, goJSONRESTHandler)
 
 	r, _ := http.NewRequest("GET", twentyRoute, nil)
 	benchRequest(b, handler, r)
 }
-func BenchmarkGoJsonRest_ParamWrite(b *testing.B) {
-	handler := loadGoJsonRestSingle("GET", "/user/:name", goJsonRestHandlerWrite)
+func BenchmarkGOJSONREST_ParamWrite(b *testing.B) {
+	handler := loadGOJSONRESTSingle("GET", "/user/:name", goJSONRESTHandlerTest)
 
 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
 	benchRequest(b, handler, r)

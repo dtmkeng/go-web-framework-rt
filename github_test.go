@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"testing"
 )
 
 // http://developer.github.com/v3/
@@ -269,8 +270,14 @@ var githubAPI = []route{
 }
 
 var (
-	githubGin   http.Handler
-	githubBeego http.Handler
+	githubGin        http.Handler
+	githubBeego      http.Handler
+	githubRevel      http.Handler
+	githubGorilaMux  http.Handler
+	githubEcho       http.Handler
+	githubAero       http.Handler
+	githubGoJSONREST http.Handler
+	githubBuffalo    http.Handler
 )
 
 func init() {
@@ -280,28 +287,127 @@ func init() {
 	calcMem("Beego_github", func() {
 		githubBeego = loadBeego(githubAPI)
 	})
+	calcMem("Revel_github", func() {
+		githubRevel = loadRevel(githubAPI)
+	})
+	calcMem("Gorilamux_github", func() {
+
+		githubGorilaMux = loadGorillaMux(githubAPI)
+	})
+	calcMem("Echo_github", func() {
+		githubEcho = loadEcho(githubAPI)
+	})
+	calcMem("Aero_github", func() {
+		githubAero = loadAero(githubAPI)
+	})
+	calcMem("GoJSONREST_github", func() {
+		githubGoJSONREST = loadGOJSONREST(githubAPI)
+	})
+	calcMem("Buffalo_github", func() {
+		githubBuffalo = loadBuffalo(githubAPI)
+	})
 }
 
-// func BenchmarkGin_GithubStatic(b *testing.B) {
-// 	req, _ := http.NewRequest("GET", "/user/repos", nil)
-// 	benchRequest(b, githubGin, req)
-// }
-// func BenchmarkGin_GithubParam(b *testing.B) {
-// 	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
-// 	benchRequest(b, githubGin, req)
-// }
-// func BenchmarkGin_GithubAll(b *testing.B) {
-// 	benchRoutes(b, githubGin, githubAPI)
-// }
+// Gin
+func BenchmarkGin_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubGin, req)
+}
+func BenchmarkGin_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubGin, req)
+}
+func BenchmarkGin_GithubAll(b *testing.B) {
+	benchRoutes(b, githubGin, githubAPI)
+}
 
-// func BenchmarkBeego_GithubStatic(b *testing.B) {
-// 	req, _ := http.NewRequest("GET", "/user/repos", nil)
-// 	benchRequest(b, githubBeego, req)
-// }
-// func BenchmarkBeego_GithubParam(b *testing.B) {
-// 	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
-// 	benchRequest(b, githubBeego, req)
-// }
-// func BenchmarkBeego_GithubAll(b *testing.B) {
-// 	benchRoutes(b, githubBeego, githubAPI)
-// }
+// Beego
+func BenchmarkBeego_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubBeego, req)
+}
+func BenchmarkBeego_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubBeego, req)
+}
+func BenchmarkBeego_GithubAll(b *testing.B) {
+	benchRoutes(b, githubBeego, githubAPI)
+}
+
+// Revel
+func BenchmarkRevel_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubRevel, req)
+}
+func BenchmarkRevel_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubRevel, req)
+}
+func BenchmarkRevel_GithubAll(b *testing.B) {
+	benchRoutes(b, githubRevel, githubAPI)
+}
+
+// // GorilarMux
+func BenchmarkGorilaMux_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubGorilaMux, req)
+}
+func BenchmarkGorilaMux_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubGorilaMux, req)
+}
+func BenchmarkGorilaMux_GithubAll(b *testing.B) {
+	benchRoutes(b, githubGorilaMux, githubAPI)
+}
+
+// Echo
+func BenchmarkEcho_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubEcho, req)
+}
+func BenchmarkEcho_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubEcho, req)
+}
+func BenchmarkEcho_GithubAll(b *testing.B) {
+	benchRoutes(b, githubEcho, githubAPI)
+}
+
+// Aero
+func BenchmarkAero_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubAero, req)
+}
+func BenchmarkAero_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubAero, req)
+}
+func BenchmarkAero_GithubAll(b *testing.B) {
+	benchRoutes(b, githubAero, githubAPI)
+}
+
+// GoJSONREST
+func BenchmarkGoJSONREST_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubGoJSONREST, req)
+}
+func BenchmarkGoJSONREST_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubGoJSONREST, req)
+}
+func BenchmarkGoJSONREST_GithubAll(b *testing.B) {
+	benchRoutes(b, githubGoJSONREST, githubAPI)
+}
+
+// Buffalo
+func BenchmarkBuffalo_GithubStatic(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/user/repos", nil)
+	benchRequest(b, githubBuffalo, req)
+}
+func BenchmarkBuffalo_GithubParam(b *testing.B) {
+	req, _ := http.NewRequest("GET", "/repos/julienschmidt/httprouter/stargazers", nil)
+	benchRequest(b, githubBuffalo, req)
+}
+func BenchmarkBuffalo_GithubAll(b *testing.B) {
+	benchRoutes(b, githubBuffalo, githubAPI)
+}

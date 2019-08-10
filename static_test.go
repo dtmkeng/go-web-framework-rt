@@ -194,7 +194,7 @@ func init() {
 		staticAero = loadAero(staticRoutes)
 	})
 	calcMem("GoJSONRest_static", func() {
-		staticGOJSONREST = loadGoJsonRest(staticRoutes)
+		staticGOJSONREST = loadGOJSONREST(staticRoutes)
 	})
 	calcMem("Buffalo_static", func() {
 		staticBuffalo = loadBuffalo(staticRoutes)

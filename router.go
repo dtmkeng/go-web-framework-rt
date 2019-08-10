@@ -16,7 +16,6 @@ import (
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/envy"
 	"github.com/gorilla/mux"
 	"github.com/revel/pathtree"
 	"github.com/revel/revel"
@@ -438,20 +437,20 @@ func loadAeroSingle(method, path string, h aero.Handler) http.Handler {
 }
 
 // GORESTJSON
-func goJsonRestHandler(w rest.ResponseWriter, req *rest.Request) {}
+func goJSONRESTHandler(w rest.ResponseWriter, req *rest.Request) {}
 
-func goJsonRestHandlerWrite(w rest.ResponseWriter, req *rest.Request) {
+func gOJSONRESTHandlerWrite(w rest.ResponseWriter, req *rest.Request) {
 	io.WriteString(w.(io.Writer), req.PathParam("name"))
 }
 
-func goJsonRestHandlerTest(w rest.ResponseWriter, req *rest.Request) {
+func goJSONRESTHandlerTest(w rest.ResponseWriter, req *rest.Request) {
 	io.WriteString(w.(io.Writer), req.RequestURI)
 }
 
-func loadGoJsonRest(routes []route) http.Handler {
-	h := goJsonRestHandler
+func loadGOJSONREST(routes []route) http.Handler {
+	h := goJSONRESTHandler
 	if loadTestHandler {
-		h = goJsonRestHandlerTest
+		h = goJSONRESTHandlerTest
 	}
 
 	api := rest.NewApi()
@@ -469,7 +468,7 @@ func loadGoJsonRest(routes []route) http.Handler {
 	return api.MakeHandler()
 }
 
-func loadGoJsonRestSingle(method, path string, hfunc rest.HandlerFunc) http.Handler {
+func loadGOJSONRESTSingle(method, path string, hfunc rest.HandlerFunc) http.Handler {
 	api := rest.NewApi()
 	router, err := rest.MakeRouter(
 		&rest.Route{method, path, hfunc},
@@ -483,7 +482,7 @@ func loadGoJsonRestSingle(method, path string, hfunc rest.HandlerFunc) http.Hand
 
 // 	buffalo
 //  ENV ...
-var ENV = envy.Get("GO_ENV", "development")
+// var ENV = envy.Get("GO_ENV", "development")
 
 func buffaloHandler(c buffalo.Context) error {
 	return nil
@@ -578,7 +577,7 @@ func loadBuffaloSingle(method, path string, h buffalo.Handler) http.Handler {
 // 			panic("Unknow HTTP method: " + r.method)
 // 		}
 // 	}
-// 	return nil
+// 	return app
 // }
 // func loadAirSingle(method, path string, h air.Handler) http.Handler {
 
@@ -598,5 +597,5 @@ func loadBuffaloSingle(method, path string, h buffalo.Handler) http.Handler {
 // 		panic("Unknow HTTP method: " + method)
 // 	}
 
-// 	return nil
+// 	return app
 // }
