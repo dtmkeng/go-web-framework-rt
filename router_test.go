@@ -14,6 +14,13 @@ var (
 	}{
 
 		{"Gin", loadGin},
+		{"Echo", loadEcho},
+		// {"Revel", loadRevel},
+		{"Beego", loadBeego},
+		{"Aero", loadAero},
+		{"Buffalo", loadBuffalo},
+		{"Mux", loadGorillaMux},
+		{"Go-json-rest", loadGOJSONREST},
 	}
 
 	// all APIs

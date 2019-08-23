@@ -1,7 +1,6 @@
 package main
 
 import (
-	"echo"
 	"fmt"
 	"io"
 	"log"
@@ -17,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gorilla/mux"
+	"github.com/labstack/echo"
 	"github.com/revel/pathtree"
 	"github.com/revel/revel"
 )
@@ -256,8 +256,7 @@ func loadRevel(routes []route) http.Handler {
 	// parseRoutes
 	var rs []*revel.Route
 	for _, r := range routes {
-		// revel.NewRoute(revel.appmo, method, path, action, fixedArgs, routesPath, line)
-		rs = append(rs, revel.NewRoute(appModule, r.method, r.path, h, "", "", 0))
+		rs = append(rs, revel.NewRoute(nil, r.method, r.path, h, "", "", 0))
 	}
 	router.Routes = rs
 
