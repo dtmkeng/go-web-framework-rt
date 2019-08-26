@@ -3,12 +3,17 @@ module github.com/dtmkeng/project/http_router
 go 1.12
 
 require (
-	github.com/BurntSushi/toml v0.3.1 // indirect
+	cloud.google.com/go v0.36.0 // indirect
+	github.com/aerogo/aero v1.3.21
+	github.com/ant0ine/go-json-rest v3.3.2+incompatible
 	github.com/astaxie/beego v1.12.0
-	github.com/fsnotify/fsnotify v1.4.7 // indirect
+	github.com/cockroachdb/cockroach-go v0.0.0-20181001143604-e0a95dfd547c // indirect
 	github.com/gin-gonic/gin v1.4.0
+	github.com/gobuffalo/buffalo v0.14.9
+	github.com/gorilla/mux v1.7.3
 	github.com/inconshreveable/log15 v0.0.0-20180818164646-67afb5ed74ec // indirect
-	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/labstack/echo v3.3.10+incompatible
+	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/myesui/uuid v1.0.0 // indirect
 	github.com/revel/cmd v0.21.1
 	github.com/revel/config v0.21.0 // indirect
