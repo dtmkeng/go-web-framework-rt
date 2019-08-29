@@ -15,6 +15,7 @@ import (
 	bc "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/buffalo/render"
 	"github.com/gorilla/mux"
 	"github.com/labstack/echo"
 	"github.com/revel/pathtree"
@@ -42,7 +43,9 @@ func (m *mockResponseWriter) Write(p []byte) (n int, err error) {
 func (m *mockResponseWriter) WriteString(s string) (n int, err error) {
 	return len(s), nil
 }
-func httpHandlerFunc(w http.ResponseWriter, r *http.Request) {}
+func httpHandlerFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello")
+}
 
 func httpHandlerFuncTest(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, r.RequestURI)
@@ -62,10 +65,12 @@ func init() {
 }
 
 // Gin
-func ginHandle(_ *gin.Context) {}
+func ginHandle(c *gin.Context) {
+	c.String(http.StatusOK, "Hello")
+}
 
 func ginHandleWrite(c *gin.Context) {
-	io.WriteString(c.Writer, c.Params.ByName("name"))
+	c.String(http.StatusOK, "Hello")
 }
 
 func ginHandleTest(c *gin.Context) {
@@ -101,10 +106,12 @@ func main() {
 }
 
 // sbeego
-func beegoHandler(ctx *bc.Context) {}
+func beegoHandler(ctx *bc.Context) {
+	ctx.WriteString("Hello")
+}
 
 func beegoHandlerWrite(ctx *bc.Context) {
-	ctx.WriteString(ctx.Input.Param(":name"))
+	ctx.WriteString("Hello")
 }
 
 func beegoHandlerTest(ctx *bc.Context) {
@@ -175,12 +182,14 @@ type RevelController struct {
 
 //Handle ...
 func (rc *RevelController) Handle() revel.Result {
-	return revelResult{}
+	return revelResult{
+		Name: "Hello",
+	}
 }
 
 //HandleWrite ...
 func (rc *RevelController) HandleWrite() revel.Result {
-	return rc.RenderText(rc.Params.Get("name"))
+	return rc.RenderText("Hello")
 }
 
 //HandleTest ...
@@ -188,7 +197,9 @@ func (rc *RevelController) HandleTest() revel.Result {
 	return rc.RenderText(rc.Request.GetRequestURI())
 }
 
-type revelResult struct{}
+type revelResult struct {
+	Name string
+}
 
 func (rr revelResult) Apply(req *revel.Request, resp *revel.Response) {}
 
@@ -322,11 +333,11 @@ func loadGorillaMuxSingle(method, path string, handler http.HandlerFunc) http.Ha
 
 // echo
 func echoHandler(c echo.Context) error {
-	return nil
+	return c.String(200, "Hello")
 }
 func echoHandlerWrite(c echo.Context) error {
-	io.WriteString(c.Response(), c.Param("name"))
-	return nil
+
+	return c.String(200, "Hello")
 }
 func echoHandlerTest(c echo.Context) error {
 	io.WriteString(c.Response(), c.Request().RequestURI)
@@ -380,12 +391,11 @@ func loadEchoSingle(method, path string, h echo.HandlerFunc) http.Handler {
 
 // aero
 func aeroHandler(c aero.Context) error {
-	return nil
+	return c.String("Hello")
 }
 
 func aeroHandlerWrite(ctx aero.Context) error {
-	io.WriteString(ctx.Response().Internal(), ctx.Get("name"))
-	return nil
+	return ctx.String("Hello")
 }
 func aeroHandlerTest(ctx aero.Context) error {
 	io.WriteString(ctx.Response().Internal(), ctx.Request().Path())
@@ -436,10 +446,12 @@ func loadAeroSingle(method, path string, h aero.Handler) http.Handler {
 }
 
 // GORESTJSON
-func goJSONRESTHandler(w rest.ResponseWriter, req *rest.Request) {}
+func goJSONRESTHandler(w rest.ResponseWriter, req *rest.Request) {
+	w.WriteJson(map[string]string{"Body": "Hello World!"})
+}
 
 func gOJSONRESTHandlerWrite(w rest.ResponseWriter, req *rest.Request) {
-	io.WriteString(w.(io.Writer), req.PathParam("name"))
+	w.WriteJson(map[string]string{"Body": "Hello World!"})
 }
 
 func goJSONRESTHandlerTest(w rest.ResponseWriter, req *rest.Request) {
@@ -482,13 +494,13 @@ func loadGOJSONRESTSingle(method, path string, hfunc rest.HandlerFunc) http.Hand
 // 	buffalo
 //  ENV ...
 // var ENV = envy.Get("GO_ENV", "development")
+var r *render.Engine
 
 func buffaloHandler(c buffalo.Context) error {
-	return nil
+	return c.Render(200, r.String("Hello"))
 }
 func buffaloHandlerWrite(c buffalo.Context) error {
-	io.WriteString(c.Response(), c.Param("name"))
-	return nil
+	return c.Render(200, r.String("Hello"))
 }
 func buffaloHandlerTest(c buffalo.Context) error {
 	io.WriteString(c.Response(), c.Request().RequestURI)
