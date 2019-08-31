@@ -182,9 +182,7 @@ type RevelController struct {
 
 //Handle ...
 func (rc *RevelController) Handle() revel.Result {
-	return revelResult{
-		Name: "Hello",
-	}
+	return rc.RenderText("Hello")
 }
 
 //HandleWrite ...
