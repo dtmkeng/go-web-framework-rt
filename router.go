@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -44,7 +45,12 @@ func (m *mockResponseWriter) WriteString(s string) (n int, err error) {
 	return len(s), nil
 }
 func httpHandlerFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	// return c.Render(200, r.JSON(msg))
+	json.NewEncoder(w).Encode(msg)
 }
 
 func httpHandlerFuncTest(w http.ResponseWriter, r *http.Request) {
@@ -66,11 +72,20 @@ func init() {
 
 // Gin
 func ginHandle(c *gin.Context) {
-	c.String(http.StatusOK, "Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	c.JSON(http.StatusOK, msg)
+	// c.JSON(http.StatusOK)
 }
 
 func ginHandleWrite(c *gin.Context) {
-	c.String(http.StatusOK, "Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	c.JSON(http.StatusOK, msg)
 }
 
 func ginHandleTest(c *gin.Context) {
@@ -107,11 +122,20 @@ func main() {
 
 // sbeego
 func beegoHandler(ctx *bc.Context) {
-	ctx.WriteString("Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	ctx.Output.JSON(msg, true, true)
+	// ctx.WriteString("Hello")
 }
 
 func beegoHandlerWrite(ctx *bc.Context) {
-	ctx.WriteString("Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	ctx.Output.JSON(msg, true, true)
 }
 
 func beegoHandlerTest(ctx *bc.Context) {
@@ -182,12 +206,20 @@ type RevelController struct {
 
 //Handle ...
 func (rc *RevelController) Handle() revel.Result {
-	return rc.RenderText("Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return rc.RenderJSON(msg)
 }
 
 //HandleWrite ...
 func (rc *RevelController) HandleWrite() revel.Result {
-	return rc.RenderText("Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return rc.RenderJSON(msg)
 }
 
 //HandleTest ...
@@ -196,7 +228,7 @@ func (rc *RevelController) HandleTest() revel.Result {
 }
 
 type revelResult struct {
-	Name string
+	// Name string
 }
 
 func (rr revelResult) Apply(req *revel.Request, resp *revel.Response) {}
@@ -331,11 +363,19 @@ func loadGorillaMuxSingle(method, path string, handler http.HandlerFunc) http.Ha
 
 // echo
 func echoHandler(c echo.Context) error {
-	return c.String(200, "Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.JSON(200, msg)
 }
 func echoHandlerWrite(c echo.Context) error {
 
-	return c.String(200, "Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.JSON(200, msg)
 }
 func echoHandlerTest(c echo.Context) error {
 	io.WriteString(c.Response(), c.Request().RequestURI)
@@ -389,11 +429,19 @@ func loadEchoSingle(method, path string, h echo.HandlerFunc) http.Handler {
 
 // aero
 func aeroHandler(c aero.Context) error {
-	return c.String("Hello")
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.JSON(msg)
 }
 
-func aeroHandlerWrite(ctx aero.Context) error {
-	return ctx.String("Hello")
+func aeroHandlerWrite(c aero.Context) error {
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.JSON(msg)
 }
 func aeroHandlerTest(ctx aero.Context) error {
 	io.WriteString(ctx.Response().Internal(), ctx.Request().Path())
@@ -495,10 +543,18 @@ func loadGOJSONRESTSingle(method, path string, hfunc rest.HandlerFunc) http.Hand
 var r *render.Engine
 
 func buffaloHandler(c buffalo.Context) error {
-	return c.Render(200, r.String("Hello"))
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.Render(200, r.JSON(msg))
 }
 func buffaloHandlerWrite(c buffalo.Context) error {
-	return c.Render(200, r.String("Hello"))
+	var msg struct {
+		Name string `json:"user"`
+	}
+	msg.Name = "Hello"
+	return c.Render(200, r.JSON(msg))
 }
 func buffaloHandlerTest(c buffalo.Context) error {
 	io.WriteString(c.Response(), c.Request().RequestURI)
