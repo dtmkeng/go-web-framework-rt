@@ -109,226 +109,51 @@ func benchRoutes(b *testing.B, router http.Handler, routes []route) {
 		}
 	}
 }
-func BenchmarkGin_Param(b *testing.B) {
+func BenchmarkGin_Error404(b *testing.B) {
 	router := loadGinSingle("GET", "/user/:name", ginHandle)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkBeego_Param(b *testing.B) {
+func BenchmarkBeego_Error404(b *testing.B) {
 	router := loadBeegoSingle("GET", "/user/:name", beegoHandler)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkRevel_Param(b *testing.B) {
+func BenchmarkRevel_Error404(b *testing.B) {
 	router := loadRevelSingle("GET", "/user/:name", "RevelController.Handle")
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkGorillaMux_Param(b *testing.B) {
-	router := loadGorillaMuxSingle("GET", "/user/{name}", httpHandlerFunc)
+func BenchmarkGorillaMux_Error404(b *testing.B) {
+	router := loadGorillaMuxSingle("GET", "/user/:name", httpHandlerFunc)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkEcho_Param(b *testing.B) {
-	router := loadEchoSingle("GET", "/user/{name}", echoHandler)
+func BenchmarkEcho_Error404(b *testing.B) {
+	router := loadEchoSingle("GET", "/user/:name", echoHandler)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkAero_Param(b *testing.B) {
-	router := loadAeroSingle("GET", "/user/{name}", aeroHandler)
+func BenchmarkAero_Error404(b *testing.B) {
+	router := loadAeroSingle("GET", "/user/:name", aeroHandler)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkGOJSONREST_Param(b *testing.B) {
+func BenchmarkGOJSONREST_Error404(b *testing.B) {
 	router := loadGOJSONRESTSingle("GET", "/user/:name", goJSONRESTHandler)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-func BenchmarkBuffalo_Param(b *testing.B) {
+func BenchmarkBuffalo_Error404(b *testing.B) {
 	router := loadBuffaloSingle("GET", "/user/:name", buffaloHandler)
 
-	r, _ := http.NewRequest("GET", "/user/gordon", nil)
+	r, _ := http.NewRequest("GET", "/test/gordon", nil)
 	benchRequest(b, router, r)
 }
-
-func BenchmarkGin_Param5(b *testing.B) {
-	router := loadGinSingle("GET", fiveColon, ginHandle)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkBeego_Param5(b *testing.B) {
-	router := loadBeegoSingle("GET", fiveColon, beegoHandler)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkRevel_Param5(b *testing.B) {
-	router := loadRevelSingle("GET", fiveColon, "RevelController.Handle")
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkGorillaMux_Param5(b *testing.B) {
-	router := loadGorillaMuxSingle("GET", fiveBrace, httpHandlerFunc)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkEcho_Param5(b *testing.B) {
-	router := loadEchoSingle("GET", fiveBrace, echoHandler)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkAero_Param5(b *testing.B) {
-	router := loadAeroSingle("GET", fiveBrace, aeroHandler)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkGOJSONREST_Param5(b *testing.B) {
-	handler := loadGOJSONRESTSingle("GET", fiveColon, goJSONRESTHandler)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, handler, r)
-}
-func BenchmarkBuffalo_Param5(b *testing.B) {
-	handler := loadBuffaloSingle("GET", fiveColon, buffaloHandler)
-
-	r, _ := http.NewRequest("GET", fiveRoute, nil)
-	benchRequest(b, handler, r)
-}
-
-// Param20
-func BenchmarkGin_Param20(b *testing.B) {
-	router := loadGinSingle("GET", twentyColon, ginHandle)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkBeego_Param20(b *testing.B) {
-	router := loadBeegoSingle("GET", twentyColon, beegoHandler)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkRevel_Param20(b *testing.B) {
-	router := loadRevelSingle("GET", twentyColon, "RevelController.Handle")
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkGorillaMux_Param20(b *testing.B) {
-	router := loadGorillaMuxSingle("GET", twentyBrace, httpHandlerFunc)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkEcho_Param20(b *testing.B) {
-	router := loadEchoSingle("GET", twentyBrace, echoHandler)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkAero_Param20(b *testing.B) {
-	router := loadAeroSingle("GET", twentyBrace, aeroHandler)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, router, r)
-}
-func BenchmarkGOJSONREST_Param20(b *testing.B) {
-	handler := loadGOJSONRESTSingle("GET", twentyColon, goJSONRESTHandler)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, handler, r)
-}
-func BenchmarkBuffalo_Param20(b *testing.B) {
-	handler := loadBuffaloSingle("GET", twentyColon, buffaloHandler)
-
-	r, _ := http.NewRequest("GET", twentyRoute, nil)
-	benchRequest(b, handler, r)
-}
-
-// Param Wirte
-// func BenchmarkGin_ParamWrite(b *testing.B) {
-// 	router := loadGinSingle("GET", "/user/:name", ginHandleWrite)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkBeego_ParamWrite(b *testing.B) {
-// 	router := loadBeegoSingle("GET", "/user/:name", beegoHandlerWrite)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkRevel_ParamWrite(b *testing.B) {
-// 	router := loadRevelSingle("GET", "/user/:name", "RevelController.HandleWrite")
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkGorillaMux_ParamWrite(b *testing.B) {
-// 	router := loadGorillaMuxSingle("GET", "/user/{name}", gorillaHandlerWrite)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkEcho_ParamWrite(b *testing.B) {
-// 	router := loadEchoSingle("GET", "/user/{name}", echoHandlerWrite)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkAero_ParamWrite(b *testing.B) {
-// 	router := loadAeroSingle("GET", "/user/{name}", aeroHandlerTest)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkGOJSONREST_ParamWrite(b *testing.B) {
-// 	handler := loadGOJSONRESTSingle("GET", "/user/:name", goJSONRESTHandlerTest)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, handler, r)
-// }
-// func BenchmarkBuffalo_ParamWrite(b *testing.B) {
-// 	handler := loadBuffaloSingle("GET", "/user/:name", buffaloHandlerTest)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, handler, r)
-// }
-
-// Air
-// func BenchmarkAir_Param(b *testing.B) {
-// 	router := loadAirSingle("GET", "/user/:name", airHandler)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, router, r)
-// }
-// func BenchmarkAir_Param5(b *testing.B) {
-// 	handler := loadAirSingle("GET", fiveColon, airHandler)
-
-// 	r, _ := http.NewRequest("GET", fiveRoute, nil)
-// 	benchRequest(b, handler, r)
-// }
-// func BenchmarkAir_Param20(b *testing.B) {
-// 	handler := loadAirSingle("GET", twentyColon, airHandler)
-
-// 	r, _ := http.NewRequest("GET", twentyRoute, nil)
-// 	benchRequest(b, handler, r)
-// }
-// func BenchmarkAir_ParamWrite(b *testing.B) {
-// 	handler := loadAirSingle("GET", "/user/:name", airHandlerTest)
-
-// 	r, _ := http.NewRequest("GET", "/user/gordon", nil)
-// 	benchRequest(b, handler, r)
-// }

@@ -13,13 +13,13 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/astaxie/beego"
 	bc "github.com/astaxie/beego/context"
+	"github.com/dtmkeng/revel"
 	"github.com/gin-gonic/gin"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gorilla/mux"
 	"github.com/labstack/echo"
 	"github.com/revel/pathtree"
-	"github.com/revel/revel"
 )
 
 type route struct {
